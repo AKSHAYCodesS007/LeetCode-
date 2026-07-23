@@ -1,26 +1,37 @@
 class Solution {
+    private String s1, s2, s3;
+    private byte[][] memo;
+
     public boolean isInterleave(String s1, String s2, String s3) {
-        int m = s1.length(), n = s2.length();
+        if (s1.length() + s2.length() != s3.length()) return false;
 
-        if (m + n != s3.length()) return false;
+        this.s1 = s1;
+        this.s2 = s2;
+        this.s3 = s3;
 
-        boolean[] dp = new boolean[n + 1];
+        memo = new byte[s1.length() + 1][s2.length() + 1];
 
-        dp[0] = true;
+        return dfs(0, 0);
+    }
 
-        for (int j = 1; j <= n; j++) {
-            dp[j] = dp[j - 1] && s2.charAt(j - 1) == s3.charAt(j - 1);
+    private boolean dfs(int i, int j) {
+        if (i == s1.length() && j == s2.length()) return true;
+
+        if (memo[i][j] != 0) return memo[i][j] == 1;
+
+        int k = i + j;
+
+        if (i < s1.length() && s1.charAt(i) == s3.charAt(k) && dfs(i + 1, j)) {
+            memo[i][j] = 1;
+            return true;
         }
 
-        for (int i = 1; i <= m; i++) {
-            dp[0] = dp[0] && s1.charAt(i - 1) == s3.charAt(i - 1);
-
-            for (int j = 1; j <= n; j++) {
-                dp[j] = (dp[j] && s1.charAt(i - 1) == s3.charAt(i + j - 1))
-                        || (dp[j - 1] && s2.charAt(j - 1) == s3.charAt(i + j - 1));
-            }
+        if (j < s2.length() && s2.charAt(j) == s3.charAt(k) && dfs(i, j + 1)) {
+            memo[i][j] = 1;
+            return true;
         }
 
-        return dp[n];
+        memo[i][j] = -1;
+        return false;
     }
 }
