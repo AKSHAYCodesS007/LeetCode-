@@ -11,11 +11,6 @@ class Solution {
                 left++;
             }
         }
-        if(minlength==Integer.MAX_VALUE){
-            return 0;
-        }
-        else{
-            return minlength;
-        }
+        return minlength==Integer.MAX_VALUE ? 0: minlength;
     }
 }
